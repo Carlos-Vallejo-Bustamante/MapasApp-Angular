@@ -9,6 +9,17 @@ import * as mapboxgl from 'mapbox-gl';
     height: 100%;
     width: 100%;
 }
+
+.list-group {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  z-index: 99;
+}
+
+li {
+  cursor: pointer;
+}
   `]
 })
 export class MarcadoresComponent implements AfterViewInit {
@@ -32,9 +43,26 @@ export class MarcadoresComponent implements AfterViewInit {
     // const markerHtml: HTMLElement = document.createElement('div');
     // markerHtml.innerHTML = 'Hola mundo';
 
-    const marker1 = new mapboxgl.Marker({ color: 'black', rotation: 45 })
+    // const marker1 = new mapboxgl.Marker()
+    //   .setLngLat(this.center)
+    //   .addTo(this.mapa);
+
+  }
+
+  agregarMarcador() {
+
+    const color = "#xxxxxx".replace(/x/g, y => (Math.random() * 16 | 0).toString(16));
+
+    const nuevoMarcador = new mapboxgl.Marker({
+      draggable: true,
+      color
+    })
       .setLngLat(this.center)
       .addTo(this.mapa);
+
+  }
+
+  irMarcador() {
 
   }
 
