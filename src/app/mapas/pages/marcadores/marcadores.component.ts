@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
+import { map } from 'rxjs';
 
 interface MarcadorColor {
   color: string;
-  marker: mapboxgl.Marker;
+  marker?: mapboxgl.Marker;
+  centro?: [number, number];
 }
 
 @Component({
@@ -47,6 +49,8 @@ export class MarcadoresComponent implements AfterViewInit {
       zoom: this.zoomLevel
     });
 
+    this.leerLocalStorage();
+
     // const markerHtml: HTMLElement = document.createElement('div');
     // markerHtml.innerHTML = 'Hola mundo';
 
@@ -72,6 +76,12 @@ export class MarcadoresComponent implements AfterViewInit {
       marker: nuevoMarcador
     });
 
+    this.guardarMarcadoresLocalStorage();
+
+    nuevoMarcador.on('dragend', () => {
+      this.guardarMarcadoresLocalStorage();
+    })
+
   }
 
   irMarcador(marker: mapboxgl.Marker) {
@@ -80,7 +90,62 @@ export class MarcadoresComponent implements AfterViewInit {
       center: marker.getLngLat(),
       essential: true
     })
+  }
 
+  guardarMarcadoresLocalStorage() {
+
+    const lngLatArr: MarcadorColor[] = [];
+
+    this.marcadores.forEach(m => {
+
+      const color = m.color;
+      const { lng, lat } = m.marker!.getLngLat();
+
+      lngLatArr.push({
+        color,
+        centro: [lng, lat]
+      })
+
+    })
+
+    localStorage.setItem('marcadores', JSON.stringify(lngLatArr))
+  }
+
+  leerLocalStorage() {
+
+    if (!localStorage.getItem('marcadores')) {
+      return;
+    }
+
+    const lngLatArr: MarcadorColor[] = JSON.parse(localStorage.getItem('marcadores')!);
+
+    console.log(lngLatArr);
+
+    lngLatArr.forEach(m => {
+
+      const nuevoMarcador = new mapboxgl.Marker({
+        color: m.color,
+        draggable: true
+      })
+        .setLngLat(m.centro!)
+        .addTo(this.mapa);
+
+      this.marcadores.push({
+        marker: nuevoMarcador,
+        color: m.color
+      })
+
+      nuevoMarcador.on('dragend', () => {
+        this.guardarMarcadoresLocalStorage();
+      })
+    })
+  }
+
+  borrarMarcador(index: number) {
+
+    this.marcadores[index].marker?.remove();
+    this.marcadores.splice(index, 1);
+    this.guardarMarcadoresLocalStorage();
 
   }
 

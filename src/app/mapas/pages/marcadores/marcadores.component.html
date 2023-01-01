@@ -9,8 +9,9 @@
             'backgroundColor': marcador.color
         }"        
         *ngFor="let marcador of marcadores; let i = index"
-        (click)="irMarcador( marcador.marker )">
-        Marker {{i + 1}}
+        (click)="irMarcador( marcador.marker! )"
+        (dblclick)="borrarMarcador( i )">
+        <strong>Marker {{i + 1}}</strong>
     </li>
 </ul>
 
