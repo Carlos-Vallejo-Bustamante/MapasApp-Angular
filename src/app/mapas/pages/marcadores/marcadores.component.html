@@ -7,9 +7,9 @@
     <li class="list-group-item color-marker"
         [ngStyle]="{
             'backgroundColor': marcador.color
-        }"
-        (click)="irMarcador()"
-        *ngFor="let marcador of marcadores; let i = index">
+        }"        
+        *ngFor="let marcador of marcadores; let i = index"
+        (click)="irMarcador( marcador.marker )">
         Marker {{i + 1}}
     </li>
 </ul>
