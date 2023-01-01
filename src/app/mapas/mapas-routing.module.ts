@@ -12,7 +12,7 @@ const routes: Routes = [
     path: '',
     children: [
       { path: 'fullscreen', component: FullScreenComponent },
-      { path: 'zoom-renge', component: ZoomRangeComponent },
+      { path: 'zoom-range', component: ZoomRangeComponent },
       { path: 'marcadores', component: MarcadoresComponent },
       { path: 'propiedades', component: PropiedadesComponent },
       { path: '**', redirectTo: 'fullscreen' },
